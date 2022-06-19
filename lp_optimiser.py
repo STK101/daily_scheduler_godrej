@@ -156,13 +156,13 @@ def d_scheduler(source):
     bpr_reg_norm['gtp'] = 0
     bpr_reg_norm['wtp'] = 0
 
-    tp = pd.read_csv('/content/drive/MyDrive/transition_prob.csv', index_col=0)
+    tp = pd.read_csv('probability data/continious_black.csv', index_col=0)
 
-    cb = pd.read_csv('/content/drive/MyDrive/continious_black.csv', index_col=0)
+    cb = pd.read_csv('probability data/continious_black.csvv', index_col=0)
 
-    yp = pd.read_csv('/content/drive/MyDrive/yt_prob.csv', index_col=0)
-    gp = pd.read_csv('/content/drive/MyDrive/gt_prob.csv', index_col=0)
-    wp = pd.read_csv('/content/drive/MyDrive/wt_prob.csv', index_col=0)
+    yp = pd.read_csv('probability data/yt_prob.csv', index_col=0)
+    gp = pd.read_csv('probability data/gt_prob.csv', index_col=0)
+    wp = pd.read_csv('probability data/wt_prob.csv', index_col=0)
 
     for x in (bpr_reg_norm.index):
         if x in tp.index:

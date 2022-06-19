@@ -43,7 +43,7 @@ x2b_max = 100
 x2d_max = 200
 x2p_max = 200
 plt_max = 50
-pir1 = []
+pri1 = []
 sns_pri1 = 0
 slb_pri1 = 0
 sld_pri1 = 0
@@ -213,7 +213,7 @@ def d_scheduler(source):
     x2d_pri1 = sum((df_make[df_make["Product Family"] == 'X2 Door'])["Pri1"])
     x2p_pri1 = sum((df_make[df_make["Product Family"] == 'X2 Precoated'])["Pri1"])
     plt_pri1 = sum((df_make[df_make["Product Family"] == 'Platina'])["Pri1"])
-    pir1 = [sns_pri1,slb_pri1,sld_pri1,x2b_pri1,x2d_pri1,x2p_pri1,plt_pri1]
+    pri1 = [sns_pri1,slb_pri1,sld_pri1,x2b_pri1,x2d_pri1,x2p_pri1,plt_pri1]
     sns_make = min(sns_max,sns_pri1)
     slb_make = min(slb_max,slb_pri1)
     sld_make = min(sld_max,sld_pri1)

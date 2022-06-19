@@ -34,8 +34,8 @@ def mask_gen(family):
         return False
 
 vect_mask = np.vectorize(mask_gen)
-xs_arr = []
-max_arr = []
+xs_arr = [0,0,0,0,0,0,0]
+max_arr = [0,0,0,0,0,0,0]
 sns_max = 50
 slb_max = 200
 sld_max = 600
@@ -43,7 +43,7 @@ x2b_max = 100
 x2d_max = 200
 x2p_max = 200
 plt_max = 50
-pri1 = []
+pri1 = [0,0,0,0,0,0,0]
 sns_pri1 = 0
 slb_pri1 = 0
 sld_pri1 = 0
@@ -51,7 +51,7 @@ x2b_pri1 = 0
 x2d_pri1 = 0
 x2p_pri1 = 0
 plt_pri1 = 0
-mk_arr = []
+mk_arr = [0,0,0,0,0,0,0]
 sns_make = min(sns_max,sns_pri1)
 slb_make = min(slb_max,slb_pri1)
 sld_make = min(sld_max,sld_pri1)
@@ -213,7 +213,7 @@ def d_scheduler(source):
     x2d_pri1 = sum((df_make[df_make["Product Family"] == 'X2 Door'])["Pri1"])
     x2p_pri1 = sum((df_make[df_make["Product Family"] == 'X2 Precoated'])["Pri1"])
     plt_pri1 = sum((df_make[df_make["Product Family"] == 'Platina'])["Pri1"])
-    pri1 = [sns_pri1,slb_pri1,sld_pri1,x2b_pri1,x2d_pri1,x2p_pri1,plt_pri1]
+    pri1_t = [sns_pri1,slb_pri1,sld_pri1,x2b_pri1,x2d_pri1,x2p_pri1,plt_pri1]
     sns_make = min(sns_max,sns_pri1)
     slb_make = min(slb_max,slb_pri1)
     sld_make = min(sld_max,sld_pri1)
@@ -221,7 +221,7 @@ def d_scheduler(source):
     x2d_make = min(x2d_max,x2d_pri1)
     x2p_make = min(x2p_max,x2p_pri1)
     plt_make = min(plt_max,plt_pri1)
-    mk_arr = [sns_make,slb_make,sld_make,x2b_make,x2d_make,x2p_make,plt_make]
+    mk_arr_t = [sns_make,slb_make,sld_make,x2b_make,x2d_make,x2p_make,plt_make]
     sns_xs = sns_max - sns_make
     slb_xs = slb_max - slb_make
     sld_xs = sld_max - sld_make
@@ -229,7 +229,11 @@ def d_scheduler(source):
     x2d_xs = x2d_max - x2d_make
     x2p_xs = x2p_max - x2p_make
     plt_xs = plt_max - plt_make
-    xs_arr = [sns_xs, slb_xs, sld_xs, x2b_xs, x2d_xs, x2p_xs, plt_xs]
+    xs_arr_t = [sns_xs, slb_xs, sld_xs, x2b_xs, x2d_xs, x2p_xs, plt_xs]
+    for i in range(0,7):
+        pri1[i] = pri1_t[i]
+        mk_arr[i] = mk_arr_t[i]
+        xs_arr[i] = xs_arr_t[i]
 
     df_make["QTY"] = df_make.apply(lambda row : qty_p1(row["Pri1"], row["Product Family"] ,row["Colour Status"][1] , row["Buffer"]), axis = 1)
 
@@ -240,8 +244,9 @@ def d_scheduler(source):
     x2d_max = xs_arr[4]
     x2p_max = xs_arr[5]
     plt_max = xs_arr[6]
-    max_arr = [sns_max,slb_max,sld_max,x2b_max,x2d_max,x2p_max,plt_max ]
-
+    max_arr_t = [sns_max,slb_max,sld_max,x2b_max,x2d_max,x2p_max,plt_max ]
+    for i in range(0,7):
+        max_arr[i] = max_arr_t[i]
     for x in df_make.index:
         if x in bpr_reg_norm.index:
             c_row = bpr_reg_norm.loc[x, bpr_reg_norm.columns]

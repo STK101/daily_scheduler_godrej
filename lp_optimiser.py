@@ -158,7 +158,7 @@ def d_scheduler(source):
 
     tp = pd.read_csv('probability data/continious_black.csv', index_col=0)
 
-    cb = pd.read_csv('probability data/continious_black.csvv', index_col=0)
+    cb = pd.read_csv('probability data/continious_black.csv', index_col=0)
 
     yp = pd.read_csv('probability data/yt_prob.csv', index_col=0)
     gp = pd.read_csv('probability data/gt_prob.csv', index_col=0)

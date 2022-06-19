@@ -74,7 +74,7 @@ def qty_p1(qty, family,colour, buffer):
                 out += min( int (buffer * 0.05), xs_arr[0] )
                 xs_arr[0] -= min( int (buffer * 0.05), xs_arr[0] )
         if (family =='SL Body' ):
-            out += int(qty*mk_arr[]1/pri1[1])
+            out += int(qty*mk_arr[1]/pri1[1])
             if (colour == "Black" and xs_arr[1] > 0):
                 out += min( int (buffer * 0.05), xs_arr[1] )
                 xs_arr[1] -= min( int (buffer * 0.05), xs_arr[1] )

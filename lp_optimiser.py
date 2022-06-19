@@ -43,6 +43,7 @@ x2b_max = 100
 x2d_max = 200
 x2p_max = 200
 plt_max = 50
+pir1 = []
 sns_pri1 = 0
 slb_pri1 = 0
 sld_pri1 = 0
@@ -50,6 +51,7 @@ x2b_pri1 = 0
 x2d_pri1 = 0
 x2p_pri1 = 0
 plt_pri1 = 0
+mk_arr = []
 sns_make = min(sns_max,sns_pri1)
 slb_make = min(slb_max,slb_pri1)
 sld_make = min(sld_max,sld_pri1)
@@ -67,37 +69,37 @@ plt_xs = plt_max - plt_make
 def qty_p1(qty, family,colour, buffer):
         out = 0
         if (family =="Slide & Store" ):
-            out += int(qty*sns_make/sns_pri1)
+            out += int(qty*mk_arr[0]/pri1[0])
             if (colour == "Black" and xs_arr[0] > 0):
                 out += min( int (buffer * 0.05), xs_arr[0] )
                 xs_arr[0] -= min( int (buffer * 0.05), xs_arr[0] )
         if (family =='SL Body' ):
-            out += int(qty*slb_make/slb_pri1)
+            out += int(qty*mk_arr[]1/pri1[1])
             if (colour == "Black" and xs_arr[1] > 0):
                 out += min( int (buffer * 0.05), xs_arr[1] )
                 xs_arr[1] -= min( int (buffer * 0.05), xs_arr[1] )
         if (family =='SL Door' ):
-            out += int(qty*sld_make/sld_pri1)
+            out += int(qty*mk_arr[2]/pri1[2])
             if (colour == "Black" and xs_arr[2] > 0):
                 out += min( int (buffer * 0.05), xs_arr[2] )
                 xs_arr[2] -= min( int (buffer * 0.05), xs_arr[2] )
         if (family =='X2 Body' ):
-            out += int(qty*x2b_make/x2b_pri1)
+            out += int(qty*mk_arr[3]/pri1[3])
             if (colour == "Black" and xs_arr[3] > 0):
                 out += min( int (buffer * 0.05), xs_arr[3] )
                 xs_arr[3] -= min( int (buffer * 0.05), xs_arr[3] )
         if (family =='X2 Door' ):
-            out += int(qty*x2d_make/x2d_pri1)
+            out += int(qty*mk_arr[4]/pri1[4])
             if (colour == "Black" and xs_arr[4] > 0):
                 out += min( int (buffer * 0.05), xs_arr[4] )
                 xs_arr[4] -= min( int (buffer * 0.05),xs_arr[4] )
         if (family =='X2 Precoated' ):
-            out += int(qty*x2p_make/x2p_pri1)
+            out += int(qty*mk_arr[5]/pri1[5])
             if (colour == "Black" and xs_arr[5] > 0):
                 out += min( int (buffer * 0.05), xs_arr[5] )
                 xs_arr[5] -= min( int (buffer * 0.05), xs_arr[5] )
         if (family =='Platina' ):
-            out += int(qty*plt_make/plt_pri1)
+            out += int(qty*mk_arr[6]/pri1[6])
             if (colour == "Black" and xs_arr[6] > 0):
                 out += min( int (buffer * 0.05), xs_arr[6] )
                 xs_arr[6] -= min( int (buffer * 0.05), xs_arr[6] )
@@ -211,6 +213,7 @@ def d_scheduler(source):
     x2d_pri1 = sum((df_make[df_make["Product Family"] == 'X2 Door'])["Pri1"])
     x2p_pri1 = sum((df_make[df_make["Product Family"] == 'X2 Precoated'])["Pri1"])
     plt_pri1 = sum((df_make[df_make["Product Family"] == 'Platina'])["Pri1"])
+    pir1 = [sns_pri1,slb_pri1,sld_pri1,x2b_pri1,x2d_pri1,x2p_pri1,plt_pri1]
     sns_make = min(sns_max,sns_pri1)
     slb_make = min(slb_max,slb_pri1)
     sld_make = min(sld_max,sld_pri1)
@@ -218,6 +221,7 @@ def d_scheduler(source):
     x2d_make = min(x2d_max,x2d_pri1)
     x2p_make = min(x2p_max,x2p_pri1)
     plt_make = min(plt_max,plt_pri1)
+    mk_arr = [sns_make,slb_make,sld_make,x2b_make,x2d_make,x2p_make,plt_make]
     sns_xs = sns_max - sns_make
     slb_xs = slb_max - slb_make
     sld_xs = sld_max - sld_make

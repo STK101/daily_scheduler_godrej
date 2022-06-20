@@ -247,7 +247,7 @@ def d_scheduler(source):
 
     for i in range(0,7):
         if (mk_arr[i] != mkact_arr[i]):
-            print("FUCK")
+            xs_arr[i] += (mk_arr[i] - mkact_arr[i])
     sns_max = xs_arr[0]
     slb_max = xs_arr[1]
     sld_max = xs_arr[2]
@@ -255,7 +255,7 @@ def d_scheduler(source):
     x2d_max = xs_arr[4]
     x2p_max = xs_arr[5]
     plt_max = xs_arr[6]
-    max_arr_t = [sns_max,slb_max,sld_max,x2b_max,x2d_max,x2p_max,plt_max ]
+    max_arr_t = [sns_max,slb_max,sld_max,x2b_max,x2d_max,x2p_max,plt_max]
     for i in range(0,7):
         max_arr[i] = max_arr_t[i]
     for x in df_make.index:
@@ -268,11 +268,7 @@ def d_scheduler(source):
                 print("error")
 
     bpr_reg_norm["QTY"] = bpr_reg_norm.apply(lambda row : qty_p2(row["QTY"],row["Colour Status"][1] , row["Buffer"],row["Product Family"] ), axis = 1)
-
-    """Categories = 'Slide & Store' , 'SL Body', 'SL Door', 'X2 Body', 'X2 Door', 'X2 Precoated', 'Platina'"""
-
     range_mask = np.arange(0,len(bpr_reg_norm))
-
     sns_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'Slide & Store').reset_index(drop = True))]
     slb_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'SL Body').reset_index(drop = True))]
     sld_mask = range_mask[np.array((bpr_reg_norm["Product Family"] ==  'SL Door').reset_index(drop = True))]
@@ -280,15 +276,10 @@ def d_scheduler(source):
     x2d_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'X2 Door').reset_index(drop = True))]
     x2p_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'X2 Precoated').reset_index(drop = True))]
     plt_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'Platina').reset_index(drop = True))]
-
     sku_tp = np.array((bpr_reg_norm.iloc[:, 20]).reset_index(drop = True))
-
     sku_bc = np.array((bpr_reg_norm.iloc[:, 21]).reset_index(drop = True))
-
     sku_names = np.array(bpr_reg_norm.index)
-
     sku_colour = np.array((bpr_reg_norm.iloc[:, 12]).reset_index(drop = True))
-
     n = len(sku_colour)
     sku_cost = [0]*n
     for i in range(0,n):
@@ -327,7 +318,7 @@ def d_scheduler(source):
             c_row['QTY'] += var.value()
             bpr_reg_norm.loc[var.name, bpr_reg_norm.columns] = c_row
 
-    bpr_reg_norm.to_excel('quantity.xlsx')
+    #bpr_reg_norm.to_excel('quantity.xlsx')
 
     out_df = bpr_reg_norm[bpr_reg_norm["QTY"] > 0]
 

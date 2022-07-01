@@ -23,7 +23,10 @@ def mask_gen(family):
         return True
     else :
         return False
-
+family_line = pd.read_excel("Family_line.xlsx")
+families = family_line["Families"]
+lines = family_line["Line-Family"]
+family_line_dict = dict(zip(families,lines))
 vect_mask = np.vectorize(mask_gen)
 xs_arr = [0,0,0,0,0,0,0]
 max_arr = [0,0,0,0,0,0,0]
@@ -314,13 +317,13 @@ def d_scheduler(source):
 
     out_df = bpr_reg_norm[bpr_reg_norm["QTY"] > 0]
 
-    out_df = out_df[["Item Desc", "QTY"]]
+    out_df = out_df[["Item Desc","Product Family","QTY"]]
 
     out_df.reset_index(inplace = True)
 
     out_df["Date"] = date
 
-    out_df = out_df[["Date","Item Code","Item Desc", "QTY"]]
-
-    out_df.columns = ["Date","ITEMCODE","DESCRIPTION", "QTY"]
+    out_df = out_df[["Date","Item Code","Item Desc", "Product Family","QTY"]]
+    out_df["Product Family"] = out_df["Product Family"].apply(lambda x: family_line_dict.get(x))
+    out_df.columns = ["Date","ITEMCODE","DESCRIPTION","LINE" ,"QTY"]
     return out_df

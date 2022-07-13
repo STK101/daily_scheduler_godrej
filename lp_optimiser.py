@@ -23,6 +23,8 @@ def mask_gen(family):
         return True
     else :
         return False
+col_dic_df = pd.read_csv('bpr_colour_mas.csv', index_col=0)
+item_col_dict = dict(zip(col_dic_df.index,col_dic_df["Powder Colour"]))
 family_line = pd.read_excel("Family_line.xlsx")
 families = family_line["Families"]
 lines = family_line["Line-Family"]
@@ -325,5 +327,8 @@ def d_scheduler(source):
 
     out_df = out_df[["Date","Item Code","Item Desc", "Product Family","QTY"]]
     out_df["Product Family"] = out_df["Product Family"].apply(lambda x: family_line_dict.get(x))
-    out_df.columns = ["Date","ITEMCODE","DESCRIPTION","LINE" ,"QTY"]
+    out_df["PRODUCTION NO"] = " "
+    out_df["COLOUR"] = out_df["Item Code"].apply(lambda x: item_col_dict.get(x))
+    out_df = out_df[["Date","PRODUCTION NO","Item Code","Item Desc","COLOUR","QTY","Product Family"]]
+    out_df.columns = ["DATE","PRODUCTION NO","ITEMCODE","DESCRIPTION","COLOUR" ,"QTY", "PRIORITY"]
     return out_df

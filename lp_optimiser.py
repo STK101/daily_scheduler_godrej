@@ -402,5 +402,6 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     out_df = out_df[out_df["QTY"] >= 15]
     out_df.reset_index(inplace = True)
     out_df = out_df[["Date","PRODUCTION NO","Item Code","Item Desc","COLOUR","QTY","Product Family"]]
+    (out_df[out_df["Product Family"] == 2])["Product Family"] = 3
     out_df.columns = ["DATE","PRODUCTION NO","ITEMCODE","DESCRIPTION","COLOUR" ,"QTY", "PRIORITY"]
     return out_df

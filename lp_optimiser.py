@@ -5,6 +5,12 @@ import numpy as np
 import pandas as pd
 import random
 
+def family_corrector(family):
+    if (family == 'SL Precoated'):
+        return 'SL Door'
+    else:
+        return family
+
 def TP_setter(colour, TP, ytp,gtp,wtp):
     if (colour == "Yellow"):
         return ytp
@@ -18,7 +24,7 @@ def TP_setter(colour, TP, ytp,gtp,wtp):
         return 0
 
 def mask_gen(family):
-    present_families = ['Slide & Store' , 'SL Body', 'SL Door', 'X2 Body', 'X2 Door', 'X2 Precoated', 'Platina']
+    present_families = ['Slide & Store' , 'SL Body', 'SL Door', 'X2 Body', 'X2 Door', 'X2 Precoated', 'Platina' ]
     if family in present_families:
         return True
     else :
@@ -29,6 +35,25 @@ family_line = pd.read_excel("Family_line.xlsx")
 families = family_line["Families"]
 lines = family_line["Line-Family"]
 family_line_dict = dict(zip(families,lines))
+ictpf_df = pd.read_csv("ItemCode_to_Production_family.csv", index_col = 0)
+ictpf_dic = zip(ictpf_df.index, ictpf_df['Product Family']) 
+
+def backlog_reader(source):
+    back_df = pd.read_csv(source, index_col=0)
+    back_idx = -1
+    for i in range(0,len(back_df)):
+        if (back_df.iloc[i])["DESCRIPTION"] == "BackLog":
+            back_idx = i
+            break
+    if(back_idx == -1):
+        return None
+    else:
+        back_df = back_df.iloc[back_idx+1:]
+        back_df = back_df[back_df.columns[:-2]]
+        back_df["Family"] = back_df["ITEMCODE"].apply(lambda x : ictpf_dic.get(x, "No Fam"))
+        back_df["Family"] = back_df["Family"].apply(lambda x : family_corrector(x))
+        return back_df
+
 vect_mask = np.vectorize(mask_gen)
 xs_arr = [0,0,0,0,0,0,0]
 max_arr = [0,0,0,0,0,0,0]
@@ -143,7 +168,7 @@ def qty_p2(qty, colour, buffer, family):
                 max_arr[6] -= min( int (buffer * 0.05), max_arr[6] )
     return out
 
-def d_scheduler(source):
+def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     xls = pd.ExcelFile(source)
     bpr = pd.read_excel(xls, xls.sheet_names[0])
 
@@ -152,6 +177,7 @@ def d_scheduler(source):
     bpr.columns = bpr.iloc[0]
     bpr = bpr.iloc[1:]
     bpr.reset_index(inplace= True, drop = True)
+    bpr["Product Family"] = bpr["Product Family"].apply(lambda x :family_corrector(x) )
     bpr_reg_norm =  bpr[bpr['Norm Category'] != "Ecom"] #316
     bpr_reg_norm.drop([bpr_reg_norm.columns[0]], axis = 1,inplace = True)
     bpr_reg_norm.reset_index(inplace= True, drop = True)
@@ -203,7 +229,6 @@ def d_scheduler(source):
 
     bpr_reg_norm["Pri1"] = bpr_reg_norm.apply(lambda row : max(row['Pending Orders'] + row['Branch TOG'] - row['Stock Qty'] - row['Intransit Stock'] - row['Stock at Plant'],0), axis = 1)
     df_make = (bpr_reg_norm[(bpr_reg_norm["Pri1"]>0)]).copy()
-
     sns_max = 50
     slb_max = 200
     sld_max = 600
@@ -211,6 +236,41 @@ def d_scheduler(source):
     x2d_max = 200
     x2p_max = 200
     plt_max = 50
+    present_families = ['Slide & Store' , 'SL Body', 'SL Door', 'X2 Body', 'X2 Door', 'X2 Precoated', 'Platina' ]
+    if (backlogl1 != None):
+        blog1 = backlog_reader(backlogl1)
+        for x in range(0,len(blog1)):
+            if ((blog1.iloc[x])["Family"] in present_families):
+                family = (blog1.iloc[x])["Family"]
+                qty =  (blog1.iloc[x])["QTY"]
+                if (family =="Slide & Store" ):
+                    sns_max = max(0,sns_max - qty)
+                if (family =='SL Body' ):
+                    slb_max
+                if (family =='SL Door' ):
+                    if (max_arr[2] > 0):
+                        out += min( int (buffer * 0.05), max_arr[2] )
+                        max_arr[2] -= min( int (buffer * 0.05), max_arr[2] )
+                if (family =='X2 Body' ):
+                    if (max_arr[3] > 0):
+                        out += min( int (buffer * 0.05), max_arr[3] )
+                        max_arr[3] -= min( int (buffer * 0.05), max_arr[3] )
+                if (family =='X2 Door' ):
+                    if (max_arr[4] > 0):
+                        out += min( int (buffer * 0.05), max_arr[4] )
+                        max_arr[4] -= min( int (buffer * 0.05), max_arr[4] )
+                if (family =='X2 Precoated' ):
+                    if (max_arr[5] > 0):
+                        out += min( int (buffer * 0.05), max_arr[5])
+                        max_arr[5] -= min( int (buffer * 0.05), max_arr[5] )
+                if (family =='Platina' ):
+                    if (max_arr[6] > 0):
+                        out += min( int (buffer * 0.05), max_arr[6] )
+                        max_arr[6] -= min( int (buffer * 0.05), max_arr[6] )
+
+
+    if (backlogl2 != None):
+
     sns_pri1 = sum((df_make[df_make["Product Family"] == "Slide & Store"])["Pri1"])
     slb_pri1 = sum((df_make[df_make["Product Family"] == 'SL Body'])["Pri1"])
     sld_pri1 = sum((df_make[df_make["Product Family"] == 'SL Door'])["Pri1"])

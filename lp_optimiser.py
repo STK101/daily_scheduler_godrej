@@ -246,31 +246,41 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
                 if (family =="Slide & Store" ):
                     sns_max = max(0,sns_max - qty)
                 if (family =='SL Body' ):
-                    slb_max
+                    slb_max = max(0, slb_max - qty)
                 if (family =='SL Door' ):
-                    if (max_arr[2] > 0):
-                        out += min( int (buffer * 0.05), max_arr[2] )
-                        max_arr[2] -= min( int (buffer * 0.05), max_arr[2] )
+                    sld_max = max(0, sld_max - qty)
                 if (family =='X2 Body' ):
-                    if (max_arr[3] > 0):
-                        out += min( int (buffer * 0.05), max_arr[3] )
-                        max_arr[3] -= min( int (buffer * 0.05), max_arr[3] )
+                    x2b_max = max(0, x2b_max - qty)
                 if (family =='X2 Door' ):
-                    if (max_arr[4] > 0):
-                        out += min( int (buffer * 0.05), max_arr[4] )
-                        max_arr[4] -= min( int (buffer * 0.05), max_arr[4] )
+                    x2d_max = max(0,x2d_max - qty)
                 if (family =='X2 Precoated' ):
-                    if (max_arr[5] > 0):
-                        out += min( int (buffer * 0.05), max_arr[5])
-                        max_arr[5] -= min( int (buffer * 0.05), max_arr[5] )
+                    x2p_max = max(0, x2p_max - qty)
                 if (family =='Platina' ):
-                    if (max_arr[6] > 0):
-                        out += min( int (buffer * 0.05), max_arr[6] )
-                        max_arr[6] -= min( int (buffer * 0.05), max_arr[6] )
+                    plt_max = max(0, plt_max - qty)
+        
 
 
     if (backlogl2 != None):
-
+        blog2 = backlog_reader(backlogl2)
+        for x in range(0,len(blog1)):
+            if ((blog2.iloc[x])["Family"] in present_families):
+                family = (blog2.iloc[x])["Family"]
+                qty =  (blog2.iloc[x])["QTY"]
+                if (family =="Slide & Store" ):
+                    sns_max = max(0,sns_max - qty)
+                if (family =='SL Body' ):
+                    slb_max = max(0, slb_max - qty)
+                if (family =='SL Door' ):
+                    sld_max = max(0, sld_max - qty)
+                if (family =='X2 Body' ):
+                    x2b_max = max(0, x2b_max - qty)
+                if (family =='X2 Door' ):
+                    x2d_max = max(0,x2d_max - qty)
+                if (family =='X2 Precoated' ):
+                    x2p_max = max(0, x2p_max - qty)
+                if (family =='Platina' ):
+                    plt_max = max(0, plt_max - qty)
+    
     sns_pri1 = sum((df_make[df_make["Product Family"] == "Slide & Store"])["Pri1"])
     slb_pri1 = sum((df_make[df_make["Product Family"] == 'SL Body'])["Pri1"])
     sld_pri1 = sum((df_make[df_make["Product Family"] == 'SL Door'])["Pri1"])

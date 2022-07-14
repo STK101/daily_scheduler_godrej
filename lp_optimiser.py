@@ -262,7 +262,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
 
     if (backlogl2 != None):
         blog2 = backlog_reader(backlogl2)
-        for x in range(0,len(blog1)):
+        for x in range(0,len(blog2)):
             if ((blog2.iloc[x])["Family"] in present_families):
                 family = (blog2.iloc[x])["Family"]
                 qty =  int((blog2.iloc[x])["QTY"])

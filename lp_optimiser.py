@@ -36,7 +36,7 @@ families = family_line["Families"]
 lines = family_line["Line-Family"]
 family_line_dict = dict(zip(families,lines))
 ictpf_df = pd.read_csv("ItemCode_to_Production_family.csv", index_col = 0)
-ictpf_dic = zip(ictpf_df.index, ictpf_df['Product Family']) 
+ictpf_dic = dict(zip(ictpf_df.index, ictpf_df['Product Family']))
 
 def backlog_reader(source):
     back_df = pd.read_csv(source, index_col=0)

@@ -242,7 +242,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
         for x in range(0,len(blog1)):
             if ((blog1.iloc[x])["Family"] in present_families):
                 family = (blog1.iloc[x])["Family"]
-                qty =  (blog1.iloc[x])["QTY"]
+                qty =  int((blog1.iloc[x])["QTY"])
                 if (family =="Slide & Store" ):
                     sns_max = max(0,sns_max - qty)
                 if (family =='SL Body' ):
@@ -265,7 +265,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
         for x in range(0,len(blog1)):
             if ((blog2.iloc[x])["Family"] in present_families):
                 family = (blog2.iloc[x])["Family"]
-                qty =  (blog2.iloc[x])["QTY"]
+                qty =  int((blog2.iloc[x])["QTY"])
                 if (family =="Slide & Store" ):
                     sns_max = max(0,sns_max - qty)
                 if (family =='SL Body' ):

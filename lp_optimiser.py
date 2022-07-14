@@ -172,7 +172,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     xls = pd.ExcelFile(source)
     bpr = pd.read_excel(xls, xls.sheet_names[0])
 
-    date = "-".join((((bpr.iloc[1])["Unnamed: 1"]).split(" ")[-1]).split("-")[0:2])
+    date = "-".join((((bpr.iloc[1])["Unnamed: 1"]).split(" ")[-1]).split("-")[0:3])
     bpr = bpr.iloc[8:]
     bpr.columns = bpr.iloc[0]
     bpr = bpr.iloc[1:]

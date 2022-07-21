@@ -7,7 +7,19 @@ import random
 
 def family_corrector(family):
     if (family == 'SL Precoated'):
+        return 'X2 Precoated'
+    elif (family == 'SLD-SCREENPRINTING NEW'):
         return 'SL Door'
+    elif (family == 'X2 Dresser'):
+        return 'X2 Body'
+    elif (family == 'X2-SCREENPRINTING'):
+        return 'X2 Door'
+    elif (family == 'SL Blend'):
+        return 'SL Door'
+    elif (family == 'SL Dual'):
+        return 'SL Door'
+    elif (family == 'SLIMLINE DUAL PRECOATED'):
+        return 'X2 Precoated'
     else:
         return family
 
@@ -177,6 +189,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     bpr.columns = bpr.iloc[0]
     bpr = bpr.iloc[1:]
     bpr.reset_index(inplace= True, drop = True)
+    bpr = bpr[bpr["Location"] == "Khalapur K2"]
     bpr["Product Family"] = bpr["Product Family"].apply(lambda x :family_corrector(x) )
     bpr_reg_norm =  bpr[bpr['Norm Category'] != "Ecom"] #316
     bpr_reg_norm.drop([bpr_reg_norm.columns[0]], axis = 1,inplace = True)
@@ -289,6 +302,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     x2p_pri1 = sum((df_make[df_make["Product Family"] == 'X2 Precoated'])["Pri1"])
     plt_pri1 = sum((df_make[df_make["Product Family"] == 'Platina'])["Pri1"])
     pri1_t = [sns_pri1,slb_pri1,sld_pri1,x2b_pri1,x2d_pri1,x2p_pri1,plt_pri1]
+    print(pri1_t)
     sns_make = min(sns_max,sns_pri1)
     slb_make = min(slb_max,slb_pri1)
     sld_make = min(sld_max,sld_pri1)
@@ -297,6 +311,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     x2p_make = min(x2p_max,x2p_pri1)
     plt_make = min(plt_max,plt_pri1)
     mk_arr_t = [sns_make,slb_make,sld_make,x2b_make,x2d_make,x2p_make,plt_make]
+    print(mk_arr_t)
     sns_xs = sns_max - sns_make
     slb_xs = slb_max - slb_make
     sld_xs = sld_max - sld_make
@@ -315,6 +330,8 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     for i in range(0,7):
         if (mk_arr[i] != mkact_arr[i]):
             xs_arr[i] += (mk_arr[i] - mkact_arr[i])
+    print(mkact_arr)
+    print(xs_arr)
     sns_max = xs_arr[0]
     slb_max = xs_arr[1]
     sld_max = xs_arr[2]
@@ -335,14 +352,14 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
                 print("error")
 
     bpr_reg_norm["QTY"] = bpr_reg_norm.apply(lambda row : qty_p2(row["QTY"],row["Colour Status"][1] , row["Buffer"],row["Product Family"] ), axis = 1)
-    range_mask = np.arange(0,len(bpr_reg_norm))
-    sns_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'Slide & Store').reset_index(drop = True))]
-    slb_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'SL Body').reset_index(drop = True))]
-    sld_mask = range_mask[np.array((bpr_reg_norm["Product Family"] ==  'SL Door').reset_index(drop = True))]
-    x2b_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'X2 Body').reset_index(drop = True))]
-    x2d_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'X2 Door').reset_index(drop = True))]
-    x2p_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'X2 Precoated').reset_index(drop = True))]
-    plt_mask = range_mask[np.array((bpr_reg_norm["Product Family"] == 'Platina').reset_index(drop = True))]
+    range_mask = (np.arange(0,len(bpr_reg_norm)))
+    sns_mask = (np.arange(0,len(bpr_reg_norm)))[np.array((bpr_reg_norm["Product Family"] == 'Slide & Store').reset_index(drop = True))]
+    slb_mask = (np.arange(0,len(bpr_reg_norm)))[np.array((bpr_reg_norm["Product Family"] == 'SL Body').reset_index(drop = True))]
+    sld_mask = (np.arange(0,len(bpr_reg_norm)))[np.array((bpr_reg_norm["Product Family"] ==  'SL Door').reset_index(drop = True))]
+    x2b_mask = (np.arange(0,len(bpr_reg_norm)))[np.array((bpr_reg_norm["Product Family"] == 'X2 Body').reset_index(drop = True))]
+    x2d_mask = (np.arange(0,len(bpr_reg_norm)))[np.array((bpr_reg_norm["Product Family"] == 'X2 Door').reset_index(drop = True))]
+    x2p_mask = (np.arange(0,len(bpr_reg_norm)))[np.array((bpr_reg_norm["Product Family"] == 'X2 Precoated').reset_index(drop = True))]
+    plt_mask = (np.arange(0,len(bpr_reg_norm)))[np.array((bpr_reg_norm["Product Family"] == 'Platina').reset_index(drop = True))]
     sku_tp = np.array((bpr_reg_norm.iloc[:, 20]).reset_index(drop = True))
     sku_bc = np.array((bpr_reg_norm.iloc[:, 21]).reset_index(drop = True))
     sku_names = np.array(bpr_reg_norm.index)
@@ -402,6 +419,7 @@ def d_scheduler(source, backlogl1 = None, backlogl2 = None):
     out_df = out_df[out_df["QTY"] >= 15]
     out_df.reset_index(inplace = True)
     out_df = out_df[["Date","PRODUCTION NO","Item Code","Item Desc","COLOUR","QTY","Product Family"]]
-    (out_df[out_df["Product Family"] == 2])["Product Family"] = 3
+    out_df["Product Family"] = out_df["Product Family"].map({2 : 3, '2' : 3, 1 : 1, '1' : 1})
+    #(out_df[out_df["Product Family"] == 2])["Product Family"] = 3
     out_df.columns = ["DATE","PRODUCTION NO","ITEMCODE","DESCRIPTION","COLOUR" ,"QTY", "PRIORITY"]
     return out_df
